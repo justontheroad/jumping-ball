@@ -2006,15 +2006,15 @@
         const factor = 1 - Math.exp(-attractSpeed * 0.016);
         ballX += (bhPos.x - ballX) * factor;
         ballY += (bhPos.y - ballY) * factor;
-        // 让轨道继续移动，黑洞向球靠近
       }
       
-      // 计算 3D 距离
+      // 胜利判定：Z 距离小于事件视界，或 3D 距离小于事件视界
       const dx = ballX - bhPos.x;
       const dy = ballY - bhPos.y;
-      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz);
       
-      if (dist < BH_EVENT_HORIZON) {
+      // 使用 Z 距离作为主要判断（更可靠），3D 距离作为辅助
+      if (dz < BH_EVENT_HORIZON * 0.8 || dist3D < BH_EVENT_HORIZON) {
         // 进入黑洞！触发胜利
         winning = true;
         winTimer = 0;
@@ -2170,7 +2170,8 @@
       mouseDeltaX = 0;
 
       // ===== Y 轴弹跳 / 坠落 =====
-      if (!dying) {
+      // 吸入过程中跳过弹跳和坠落检测
+      if (!dying && !bhAttracting) {
         velY += currentGravityY * dt;
         ballY += velY * dt;
       }
@@ -2256,8 +2257,8 @@
             velY  = 0;
           }
         }
-      } else if (falling) {
-        // 坠落模式：一直往下掉
+      } else if (falling && !bhAttracting) {
+        // 坠落模式：一直往下掉（吸入过程中不触发重置）
         if (ballY < FALL_RESET_Y) {
           resetGame();
         }
@@ -2269,26 +2270,16 @@
       // 胜利吸入动画（优先级最高）
       if (winning) {
         updateWin(dt);
-      } else {
-        // 正常更新黑洞（如果已激活）
-        if (blackHoleActive) {
-          updateBlackHole(dt);
-          checkBlackHoleCollision();
-          // 容错：黑洞已经非常接近球（Z 距离小于 1 米），强制判定胜利
-          if (!winning && bhGroup && Math.abs(bhGroup.position.z) < 1.0) {
-            winning = true;
-            winTimer = 0;
-            velZ = 0;
-            falling = false;
-            bhAttracting = false;
-            hideCombo();
-            targetDistance = totalDistance;
-          }
-        }
+      } else if (blackHoleActive) {
+        // 正常更新黑洞
+        updateBlackHole(dt);
+        checkBlackHoleCollision();
       }
 
       // 每帧根据 Z 速度移动轨道（正值=轨道向 Z 正方向移动=向球靠近）
-      updateTrack(velZ * dt);
+      // 吸入过程中保持轨道移动，确保黑洞能靠近球
+      const effectiveVelZ = bhAttracting ? Math.max(velZ, 3.0) : velZ;
+      updateTrack(effectiveVelZ * dt);
 
       // ===== 更新球位置 =====
       if (!dying) {
