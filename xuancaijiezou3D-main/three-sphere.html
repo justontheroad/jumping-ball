@@ -771,16 +771,53 @@
     const GAP_MAX = 7.5;
 
     // ===== 颜色定义 =====
+    // 基础颜色（1-5关）：3种
+    // 第六关解锁：绿色
+    // 第八关解锁：橙色
+    // 第十关解锁：紫色
     const COLORS = {
-      pink:  { hex: 0xff68fd, rgb: [255, 104, 253] },
-      yellow:{ hex: 0xffe528, rgb: [255, 229,  40] },
-      blue:  { hex: 0x15befc, rgb: [ 21, 190, 252] }
+      pink:   { hex: 0xff68fd, rgb: [255, 104, 253] },  // 粉色（基础）
+      yellow: { hex: 0xffe528, rgb: [255, 229,  40] },  // 黄色（基础）
+      blue:   { hex: 0x15befc, rgb: [ 21, 190, 252] },  // 蓝色（基础）
+      green:  { hex: 0x00ff88, rgb: [  0, 255, 136] },  // 绿色（第6关解锁）
+      orange: { hex: 0xff8844, rgb: [255, 136,  68] },  // 橙色（第8关解锁）
+      purple: { hex: 0xaa66ff, rgb: [170, 102, 255] }   // 紫色（第10关解锁）
     };
-    const COLOR_KEYS = ['pink', 'yellow', 'blue'];
-    function randColor() { return COLOR_KEYS[Math.floor(Math.random() * 3)]; }
+
+    // 根据当前关卡获取可用颜色
+    function getAvailableColors() {
+      const baseColors = ['pink', 'yellow', 'blue'];
+      if (currentLevel >= 9) {
+        // 第10关：全部6种颜色
+        return [...baseColors, 'green', 'orange', 'purple'];
+      } else if (currentLevel >= 7) {
+        // 第8-9关：5种颜色
+        return [...baseColors, 'green', 'orange'];
+      } else if (currentLevel >= 5) {
+        // 第6-7关：4种颜色
+        return [...baseColors, 'green'];
+      }
+      // 第1-5关：3种基础颜色
+      return baseColors;
+    }
+
+    function randColor() {
+      const available = getAvailableColors();
+      return available[Math.floor(Math.random() * available.length)];
+    }
+
     function randTwoColors() {
-      const shuffled = [...COLOR_KEYS].sort(() => Math.random() - 0.5);
+      const available = getAvailableColors();
+      const shuffled = [...available].sort(() => Math.random() - 0.5);
       return [shuffled[0], shuffled[1]];
+    }
+
+    function randThreeColors() {
+      const available = getAvailableColors();
+      const shuffled = [...available].sort(() => Math.random() - 0.5);
+      // 如果可用颜色少于3种，返回所有可用颜色
+      if (shuffled.length <= 3) return shuffled;
+      return [shuffled[0], shuffled[1], shuffled[2]];
     }
 
     // ===== 轨道组尺寸 =====
@@ -872,37 +909,57 @@
 
     // ===== 关卡系统 =====
     const LEVELS = [
-      {
-        name: '永恒号', nameEn: 'Endurance',
-        maxType: 1, winHits: 1,
-        desc: '跳 1 次，进入黑洞'
-      },
-      {
-        name: '水星', nameEn: 'Miller',
-        maxType: 2, winHits: 10,
-        desc: '跳 10 次，进入黑洞'
-      },
-      {
-        name: '曼恩星球', nameEn: 'Mann',
-        maxType: 3, winHits: 20,
-        desc: '跳 20 次，进入黑洞'
-      },
-      {
-        name: '土星', nameEn: 'Saturn',
-        maxType: 3, winHits: 200,
-        desc: '跳 200 次，进入黑洞'
-      },
-      {
-        name: '卡冈图雅', nameEn: 'Gargantua',
-        maxType: 3, winHits: 2000,
-        desc: '跳 2000 次，进入黑洞'
-      }
+      { name: '永恒号', nameEn: 'Endurance', maxType: 1, winHits: 5 },
+      { name: '水星', nameEn: 'Miller', maxType: 2, winHits: 15 },
+      { name: '曼恩星球', nameEn: 'Mann', maxType: 2, winHits: 30 },
+      { name: '米勒星球', nameEn: 'Miller-2', maxType: 3, winHits: 50 },
+      { name: '土星', nameEn: 'Saturn', maxType: 3, winHits: 80 },
+      { name: '木星', nameEn: 'Jupiter', maxType: 3, winHits: 120 },
+      { name: '天王星', nameEn: 'Uranus', maxType: 3, winHits: 180 },
+      { name: '海王星', nameEn: 'Neptune', maxType: 3, winHits: 250 },
+      { name: '超新星', nameEn: 'Supernova', maxType: 3, winHits: 350 },
+      { name: '卡冈图雅', nameEn: 'Gargantua', maxType: 3, winHits: 500 }
     ];
+
+    // ===== 周目系统 =====
+    let currentCycle = 1; // 当前周目（1 = 一周目）
     let currentLevel = 0;
-    function getLevel() { return LEVELS[currentLevel]; }
+
+    // 周目难度系数
+    const CYCLE_MULTIPLIERS = [
+      1.0,   // 一周目
+      1.5,   // 二周目
+      2.0,   // 三周目
+      2.5,   // 四周目
+      3.0    // 五周目+
+    ];
+
+    // 周目提示语
+    const CYCLE_MESSAGES = {
+      2: '重启轮回，再续前缘',
+      3: '星河无尽，勇者无疆',
+      4: '超越极限，永不止步',
+      5: '永恒轮回，传说永存'
+    };
+
+    function getCycleMultiplier() {
+      const idx = Math.min(currentCycle - 1, CYCLE_MULTIPLIERS.length - 1);
+      return CYCLE_MULTIPLIERS[idx];
+    }
+
+    function getLevel() {
+      const level = LEVELS[currentLevel];
+      const multiplier = getCycleMultiplier();
+      return {
+        ...level,
+        winHits: Math.floor(level.winHits * multiplier),
+        name: level.name,
+        nameEn: level.nameEn
+      };
+    }
 
     // ===== 关卡解锁状态 =====
-    let unlockedLevels = [true, false, false, false, false]; // 第一关默认解锁
+    let unlockedLevels = [true, false, false, false, false, false, false, false, false, false];
 
     function unlockNextLevel() {
       const nextLevel = currentLevel + 1;
@@ -916,7 +973,8 @@
       try {
         localStorage.setItem('jumpingBall_progress', JSON.stringify({
           unlockedLevels,
-          currentLevel
+          currentLevel,
+          currentCycle
         }));
       } catch (e) {}
     }
@@ -928,6 +986,7 @@
           const parsed = JSON.parse(data);
           if (parsed.unlockedLevels) unlockedLevels = parsed.unlockedLevels;
           if (typeof parsed.currentLevel === 'number') currentLevel = parsed.currentLevel;
+          if (typeof parsed.currentCycle === 'number') currentCycle = parsed.currentCycle;
         }
       } catch (e) {}
     }
@@ -937,15 +996,30 @@
     const levelCardsContainer = document.getElementById('levelCards');
     const inGameMenuBtn = document.getElementById('inGameMenuBtn');
 
+    // 获取当前关卡的颜色数量
+    function getColorCount() {
+      if (currentLevel >= 9) return 6;
+      if (currentLevel >= 7) return 5;
+      if (currentLevel >= 5) return 4;
+      return 3;
+    }
+
     // 动态生成关卡卡片
     LEVELS.forEach((lv, i) => {
       const card = document.createElement('div');
       card.className = 'level-card';
       card.dataset.index = i;
+      // 计算该关卡的颜色数量
+      let colorCount = 3;
+      if (i >= 9) colorCount = 6;
+      else if (i >= 7) colorCount = 5;
+      else if (i >= 5) colorCount = 4;
+      
       card.innerHTML = `
         <div class="card-num">LEVEL ${i + 1}</div>
         <div class="card-name">${lv.name}</div>
         <div class="card-name-en">${lv.nameEn}</div>
+        <div class="card-desc">${colorCount}种颜色</div>
       `;
       card.addEventListener('click', () => {
         if (!unlockedLevels[i]) return; // 锁定的关卡不可点击
@@ -966,6 +1040,16 @@
 
     function showLevelSelect() {
       updateCardStates();
+      // 更新周目显示（一周目不显示，二周目及以上显示）
+      const levelSelectTitle = document.getElementById('levelSelectTitle');
+      const levelSelectSub = document.getElementById('levelSelectSub');
+      if (currentCycle > 1) {
+        levelSelectTitle.textContent = `第${currentCycle}周目`;
+        levelSelectSub.textContent = `难度系数: ${getCycleMultiplier()}x`;
+      } else {
+        levelSelectTitle.textContent = '选择关卡';
+        levelSelectSub.textContent = 'INTERSTELLAR';
+      }
       levelSelectOverlay.style.display = 'flex';
       inGameMenuBtn.style.display = 'none';
     }
@@ -1076,13 +1160,13 @@
         group = createType1(z, randColor());
       } else if (type === 2) {
         // 两块方块：必须包含 safeColor
-        const otherKeys = COLOR_KEYS.filter(k => k !== safeColor);
-        const other = otherKeys[Math.floor(Math.random() * otherKeys.length)];
+        const available = getAvailableColors().filter(k => k !== safeColor);
+        const other = available[Math.floor(Math.random() * available.length)];
         const cols = [safeColor, other].sort(() => Math.random() - 0.5);
         group = createType2(z, cols);
       } else {
-        // 三块方块：三色各一
-        const cols = [...COLOR_KEYS].sort(() => Math.random() - 0.5);
+        // 三块方块：使用随机三种颜色
+        const cols = randThreeColors();
         group = createType3(z, cols);
       }
       trackGroups.push(group);
@@ -1720,7 +1804,10 @@
       targetDistance = null;
       distTarget.textContent = '目标: ??? m';
       distTarget.classList.remove('revealed');
-      levelNameEl.textContent = getLevel().name;
+      // 一周目不显示周目信息，二周目及以上显示
+      const lv = getLevel();
+      const cycleText = currentCycle > 1 ? `第${currentCycle}周目 · ` : '';
+      levelNameEl.textContent = `${cycleText}${lv.name}`;
       updateDistanceUI();
     }
 
@@ -1926,9 +2013,12 @@
       const isLastLevel = currentLevel >= LEVELS.length - 1;
       
       if (isLastLevel) {
+        // 通关最后一关，进入下一周目
+        const nextCycle = currentCycle + 1;
+        const cycleMsg = CYCLE_MESSAGES[nextCycle] || '永恒轮回，传说永存';
         victoryTitle.textContent = '通关！';
-        victoryDesc.textContent = `恭喜你征服了${lv.name}！全部关卡已完成！`;
-        victoryBtn.textContent = '返回选关';
+        victoryDesc.textContent = `恭喜征服${lv.name}！${cycleMsg}`;
+        victoryBtn.textContent = currentCycle === 1 ? '开启二周目' : `开启第${nextCycle}周目`;
       } else {
         victoryTitle.textContent = 'YOU WIN!';
         victoryDesc.textContent = `你成功进入了${lv.name}的黑洞！`;
@@ -1944,6 +2034,11 @@
       unlockNextLevel();
       const isLastLevel = currentLevel >= LEVELS.length - 1;
       if (isLastLevel) {
+        // 进入下一周目，重置关卡进度
+        currentCycle++;
+        currentLevel = 0;
+        unlockedLevels = [true, false, false, false, false, false, false, false, false, false];
+        saveProgress();
         showLevelSelect();
       } else {
         currentLevel++;
@@ -1961,9 +2056,11 @@
 
     function showLevelAnnounce() {
       const lv = getLevel();
-      levelNumEl.textContent = `LEVEL ${currentLevel + 1}`;
+      // 一周目不显示周目信息，二周目及以上显示
+      const cycleText = currentCycle > 1 ? `第${currentCycle}周目 · ` : '';
+      levelNumEl.textContent = `${cycleText}LEVEL ${currentLevel + 1}`;
       levelTitleEl.textContent = lv.name;
-      levelSubEl.textContent = `进入黑洞 — ${lv.nameEn}`;
+      levelSubEl.textContent = `跳 ${lv.winHits} 次 · ${getColorCount()}种颜色`;
       // 移除再添加 class 重置动画
       levelAnnounce.classList.remove('show');
       void levelAnnounce.offsetWidth;
