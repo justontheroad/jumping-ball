@@ -1252,8 +1252,10 @@
         const cols = [safeColor, other].sort(() => Math.random() - 0.5);
         group = createType2(z, cols);
       } else {
-        // 三块方块：使用随机三种颜色
-        const cols = randThreeColors();
+        const available = getAvailableColors().filter(k => k !== safeColor);
+        const shuffled = [...available].sort(() => Math.random() - 0.5);
+        const otherTwo = shuffled.slice(0, 2);
+        const cols = [safeColor, ...otherTwo].sort(() => Math.random() - 0.5);
         group = createType3(z, cols);
       }
       trackGroups.push(group);
@@ -2514,6 +2516,17 @@
       renderer.render(scene, camera);
     }
     animate();
+
+    window._dbg = {
+      getTracks: () => trackGroups.map((g, i) => ({
+        z: groupZList[i],
+        type: g.type,
+        color: g.colorKey || g.colorKeys,
+        isVictory: g.isVictoryTrack
+      })),
+      getLevel: () => ({ currentLevel, currentCycle, hitCount, ballColorKey }),
+      getAvailableColors
+    };
 
     window.addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
