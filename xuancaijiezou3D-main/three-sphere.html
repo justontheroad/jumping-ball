@@ -766,6 +766,37 @@
       }
     }
 
+    function recalcVelZFromAir() {
+      let nearestAheadZ = -Infinity;
+      for (const z of groupZList) {
+        if (z < -0.5 && z > nearestAheadZ) {
+          nearestAheadZ = z;
+        }
+      }
+      if (nearestAheadZ <= -Infinity) return;
+
+      const g = Math.abs(GRAVITY_Y);
+      const h = ballY - floorContact;
+      const normalVelY = Math.sqrt(2 * g * Math.max(INIT_HEIGHT - h, 0));
+      if (velY > 0 && velY > normalVelY * 1.1) {
+        velY = normalVelY;
+      }
+
+      let timeToLand;
+      if (h <= 0.01) {
+        timeToLand = getCurrentBouncePeriod();
+      } else {
+        const vyUp = velY > 0 ? velY : 0;
+        const tUp = vyUp / g;
+        const hTop = h + vyUp * tUp - 0.5 * g * tUp * tUp;
+        const tDown = Math.sqrt(2 * Math.max(hTop, 0) / g);
+        timeToLand = tUp + tDown;
+        if (timeToLand < 0.1) timeToLand = getCurrentBouncePeriod();
+      }
+
+      velZ = Math.abs(nearestAheadZ) / timeToLand;
+    }
+
     // 轨道组间距
     const GAP_MIN = 3.75;
     const GAP_MAX = 7.5;
@@ -1148,31 +1179,50 @@
     let victoryTrackSpawned = false; // 是否已生成通关轨道
 
     function createVictoryTrack(startZ) {
-      // 生成三块连续的轨道，中间一块是通关判定区
-      // 第一块：普通轨道
+      const VICTORY_GAP = 6 + Math.random() * 3;
+
       const group1 = createType1(startZ, randColor());
       trackGroups.push(group1);
       groupZList.push(startZ);
 
-      // 第二块：通关判定轨道（黑洞所在位置）
-      const z2 = startZ - randGap();
+      const z2 = startZ - VICTORY_GAP;
       const group2 = createType1(z2, randColor());
-      group2.isVictoryTrack = true; // 标记为通关轨道
+      group2.isVictoryTrack = true;
       trackGroups.push(group2);
       groupZList.push(z2);
       victoryTrackGroups.push(trackGroups.length - 1);
 
-      // 第三块：普通轨道
-      const z3 = z2 - randGap();
+      const z3 = z2 - VICTORY_GAP;
       const group3 = createType1(z3, randColor());
       trackGroups.push(group3);
       groupZList.push(z3);
 
-      // 在通关轨道位置生成黑洞
-      createBlackHole(z2);
-      bhGroup.scale.setScalar(1); // 直接显示，不需要渐入动画
+      for (let i = trackGroups.length - 1; i >= 0; i--) {
+        const gz = groupZList[i];
+        if (gz < z3 - 2 && !trackGroups[i].isVictoryTrack) {
+          disposeGroup(trackGroups[i]);
+          trackGroups.splice(i, 1);
+          groupZList.splice(i, 1);
+          for (let j = 0; j < victoryTrackGroups.length; j++) {
+            if (victoryTrackGroups[j] === i) {
+              victoryTrackGroups.splice(j, 1);
+              j--;
+            } else if (victoryTrackGroups[j] > i) {
+              victoryTrackGroups[j]--;
+            }
+          }
+        } else if ((trackGroups[i].type === 2 || trackGroups[i].type === 3) && gz >= z3 - 2 && gz <= startZ + 2) {
+          const oldColor = trackGroups[i].colorKeys ? trackGroups[i].colorKeys[0] : randColor();
+          disposeGroup(trackGroups[i]);
+          const replacement = createType1(gz, oldColor);
+          replacement.isVictoryTrack = trackGroups[i].isVictoryTrack;
+          trackGroups[i] = replacement;
+        }
+      }
 
-      // 设置目标距离
+      createBlackHole(z2);
+      bhGroup.scale.setScalar(1);
+
       targetDistance = totalDistance + Math.abs(z2);
       updateDistanceUI();
 
@@ -1300,8 +1350,7 @@
         const isNearVictory = victoryTrackGroups.some(vIdx => {
           if (vIdx === undefined || vIdx >= trackGroups.length) return false;
           const vz = trackGroups[vIdx].z;
-          // 通关轨道前后 15 米内的轨道都保护
-          return Math.abs(z - vz) < 15;
+          return Math.abs(z - vz) < 30;
         });
         if (trackGroups[i].isVictoryTrack || isNearVictory) continue;
         if (z > FADE_START) {
@@ -1315,15 +1364,15 @@
         }
       }
 
-      // 补充
-      let minZ = groupZList.length > 0 ? Math.min(...groupZList) : 0;
-      while (minZ > -VISIBLE_DEPTH) {
-        minZ -= randGap();
-        createRandomGroup(minZ, lastLongTrackColor, getLevel().maxType);
-        // 如果生成了长直轨道，更新安全颜色
-        const newGroup = trackGroups[trackGroups.length - 1];
-        if (newGroup.type === 1) {
-          lastLongTrackColor = newGroup.colorKey;
+      if (!victoryTrackSpawned) {
+        let minZ = groupZList.length > 0 ? Math.min(...groupZList) : 0;
+        while (minZ > -VISIBLE_DEPTH) {
+          minZ -= randGap();
+          createRandomGroup(minZ, lastLongTrackColor, getLevel().maxType);
+          const newGroup = trackGroups[trackGroups.length - 1];
+          if (newGroup.type === 1) {
+            lastLongTrackColor = newGroup.colorKey;
+          }
         }
       }
     }
@@ -2311,10 +2360,8 @@
       if (boostTimer <= 0) {
         boostTimer = 0;
         currentGravityY = GRAVITY_Y;
-        // 加速结束，重算 velZ 保证落点准确
-        //（弹跳周期变长了，如果保持旧速度会飞过头）
         if (!falling && !dying) {
-          recalcVelZ();
+          recalcVelZFromAir();
         }
       }
     }
@@ -2352,7 +2399,7 @@
               hitCount++;
               if (hitCount >= getLevel().winHits && !victoryTrackSpawned) {
                 // 生成通关轨道（在球前方较近位置，约 3-5 次跳跃距离）
-                const victoryZ = -15 - Math.random() * 10; // 15-25 米前方
+                const victoryZ = -10 - Math.random() * 8;
                 createVictoryTrack(victoryZ);
                 blackHoleActive = true;
               }
@@ -2390,7 +2437,7 @@
                 hitCount++;
                 if (hitCount >= getLevel().winHits && !victoryTrackSpawned) {
                   // 生成通关轨道（在球前方较近位置，约 3-5 次跳跃距离）
-                  const victoryZ = -15 - Math.random() * 10; // 15-25 米前方
+                  const victoryZ = -10 - Math.random() * 8;
                   createVictoryTrack(victoryZ);
                   blackHoleActive = true;
                 }
