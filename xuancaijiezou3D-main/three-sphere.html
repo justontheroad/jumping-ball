@@ -2517,17 +2517,6 @@
     }
     animate();
 
-    window._dbg = {
-      getTracks: () => trackGroups.map((g, i) => ({
-        z: groupZList[i],
-        type: g.type,
-        color: g.colorKey || g.colorKeys,
-        isVictory: g.isVictoryTrack
-      })),
-      getLevel: () => ({ currentLevel, currentCycle, hitCount, ballColorKey }),
-      getAvailableColors
-    };
-
     window.addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
