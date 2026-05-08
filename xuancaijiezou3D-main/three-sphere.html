@@ -384,6 +384,267 @@
       transform: scale(1.04);
     }
 
+    /* 模式切换 Tab */
+    #modeTabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 32px;
+    }
+    .mode-tab {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(180, 210, 255, 0.4);
+      background: transparent;
+      border: none;
+      padding: 10px 36px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .mode-tab::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #64b5f6, #e040fb);
+      border-radius: 1px;
+      transition: width 0.3s ease;
+    }
+    .mode-tab.active {
+      color: #fff;
+    }
+    .mode-tab.active::after {
+      width: 80%;
+    }
+    .mode-tab:hover {
+      color: rgba(180, 210, 255, 0.8);
+    }
+
+    /* 无限模式面板 */
+    #endlessPanel {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: containerIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #endlessPanel.visible {
+      display: flex;
+    }
+    .endless-card {
+      width: 320px;
+      padding: 48px 40px 40px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(20, 12, 45, 0.9), rgba(8, 4, 22, 0.95));
+      border: 1px solid rgba(100, 180, 255, 0.15);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .endless-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 30%, rgba(100, 180, 255, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .endless-en {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(180, 210, 255, 0.5);
+      letter-spacing: 10px;
+      margin-bottom: 8px;
+    }
+    .endless-zh {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 52px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #64b5f6, #e040fb, #ffd740);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 12px;
+      margin-bottom: 28px;
+    }
+    .endless-divider {
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100, 180, 255, 0.3), transparent);
+      margin: 0 auto 20px;
+    }
+    .endless-label {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 12px;
+      color: rgba(180, 210, 255, 0.4);
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    .endless-best-dist {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: #ffd740;
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px rgba(255, 215, 64, 0.3);
+    }
+    .endless-best-stage {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 14px;
+      color: rgba(180, 210, 255, 0.5);
+      letter-spacing: 2px;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+    .endless-run-info {
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    .endless-run-dist {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 2px;
+    }
+    .endless-run-stage {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(180, 210, 255, 0.4);
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    .endless-new-record {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffd740, #ff6e40, #e040fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 3px;
+      margin-top: 8px;
+      animation: newRecordPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes newRecordPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.08); }
+    }
+    #endlessStartBtn {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #64b5f6, #e040fb);
+      border: none;
+      padding: 14px 48px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(100, 181, 246, 0.3);
+      letter-spacing: 3px;
+      margin-top: 24px;
+    }
+    #endlessStartBtn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 6px 30px rgba(100, 181, 246, 0.5);
+    }
+    #endlessStartBtn:active {
+      transform: scale(0.97);
+    }
+    .endless-total-runs {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 12px;
+      color: rgba(180, 210, 255, 0.3);
+      letter-spacing: 2px;
+      margin-top: 16px;
+    }
+
+    /* GameOver 无限模式扩展 */
+    #gameOverEndlessInfo {
+      display: none;
+      margin-top: 16px;
+      text-align: center;
+    }
+    #gameOverEndlessInfo.visible {
+      display: block;
+    }
+    .go-dist {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffd740;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(255, 215, 64, 0.3);
+    }
+    .go-stage {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(180, 210, 255, 0.5);
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    .go-new-record {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffd740, #ff6e40, #e040fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 3px;
+      margin-top: 8px;
+      animation: newRecordPulse 1.2s ease-in-out infinite;
+    }
+    #retryBtn {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #ff68fd, #15befc);
+      border: none;
+      padding: 14px 48px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(255, 104, 253, 0.3);
+      letter-spacing: 2px;
+      margin-top: 20px;
+    }
+    #retryBtn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 6px 30px rgba(255, 104, 253, 0.5);
+    }
+    #retryBtn:active {
+      transform: scale(0.97);
+    }
+    #backToMenuLink {
+      display: none;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(180, 210, 255, 0.5);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 2px;
+      margin-top: 16px;
+      transition: color 0.2s;
+    }
+    #backToMenuLink:hover {
+      color: rgba(180, 210, 255, 0.9);
+    }
+    #backToMenuLink.visible {
+      display: inline-block;
+    }
+
     /* 游戏内返回菜单按钮 */
     #inGameMenuBtn {
       display: none;
@@ -464,9 +725,32 @@
   <!-- 关卡选择界面 -->
   <div id="levelSelectOverlay">
     <div id="levelSelectContainer">
+      <div id="modeTabs">
+        <button class="mode-tab active" id="tabLevels">关卡模式</button>
+        <button class="mode-tab" id="tabEndless">无限模式</button>
+      </div>
       <div id="levelSelectTitle">选择关卡</div>
       <div id="levelSelectSub">INTERSTELLAR</div>
       <div id="levelCards"></div>
+      <div id="endlessPanel">
+        <div class="endless-card">
+          <div class="endless-en">ENDLESS</div>
+          <div class="endless-zh">无 垠</div>
+          <div class="endless-divider"></div>
+          <div class="endless-label">最远记录</div>
+          <div class="endless-best-dist" id="endlessBestDist">0 m</div>
+          <div class="endless-best-stage" id="endlessBestStage">--</div>
+          <div class="endless-run-info" id="endlessRunInfo" style="display:none">
+            <div class="endless-divider"></div>
+            <div class="endless-label">本次统计</div>
+            <div class="endless-run-dist" id="endlessRunDist">0 m</div>
+            <div class="endless-run-stage" id="endlessRunStage">--</div>
+            <div class="endless-new-record" id="endlessNewRecord" style="display:none">NEW RECORD!</div>
+          </div>
+          <button id="endlessStartBtn">开始挑战</button>
+          <div class="endless-total-runs" id="endlessTotalRuns">已挑战 0 次</div>
+        </div>
+      </div>
       <button id="backToMenuBtn">返回菜单</button>
     </div>
   </div>
@@ -508,7 +792,14 @@
     <div id="gameOverBox">
       <h1>GAME OVER</h1>
       <p>颜色不同，球碎了...</p>
+      <div id="gameOverEndlessInfo">
+        <div class="go-dist" id="goDist">0 m</div>
+        <div class="go-stage" id="goStage">--</div>
+        <div class="go-new-record" id="goNewRecord" style="display:none">NEW RECORD!</div>
+      </div>
+      <button id="retryBtn">再来一次</button>
       <button id="restartBtn">返回选关</button>
+      <button id="backToMenuLink">返回菜单</button>
     </div>
   </div>
 
@@ -817,19 +1108,7 @@
 
     // 根据当前关卡获取可用颜色
     function getAvailableColors() {
-      const baseColors = ['pink', 'yellow', 'blue'];
-      if (currentLevel >= 9) {
-        // 第10关：全部6种颜色
-        return [...baseColors, 'green', 'orange', 'purple'];
-      } else if (currentLevel >= 7) {
-        // 第8-9关：5种颜色
-        return [...baseColors, 'green', 'orange'];
-      } else if (currentLevel >= 5) {
-        // 第6-7关：4种颜色
-        return [...baseColors, 'green'];
-      }
-      // 第1-5关：3种基础颜色
-      return baseColors;
+      return strategy.getAvailableColors();
     }
 
     function randColor() {
@@ -989,6 +1268,202 @@
       };
     }
 
+    // ===== 游戏模式策略系统 =====
+    let gameMode = 'levels';
+    let strategy = null;
+
+    const ENDLESS_STAGES = [
+      { dist: 0,    name: '启程', nameEn: 'Departure',   colorCount: 3, maxType: 2, gapScale: 1.0,  boostProb: 0.15 },
+      { dist: 100,  name: '加速', nameEn: 'Acceleration', colorCount: 3, maxType: 3, gapScale: 1.0,  boostProb: 0.15 },
+      { dist: 250,  name: '迷彩', nameEn: 'Camouflage',   colorCount: 4, maxType: 3, gapScale: 1.0,  boostProb: 0.15 },
+      { dist: 450,  name: '压缩', nameEn: 'Compression',  colorCount: 4, maxType: 3, gapScale: 0.9,  boostProb: 0.15 },
+      { dist: 700,  name: '混沌', nameEn: 'Chaos',        colorCount: 5, maxType: 3, gapScale: 0.85, boostProb: 0.20 },
+      { dist: 1000, name: '深渊', nameEn: 'Abyss',        colorCount: 5, maxType: 3, gapScale: 0.8,  boostProb: 0.25 },
+      { dist: 1400, name: '无尽', nameEn: 'Infinity',     colorCount: 6, maxType: 3, gapScale: 0.75, boostProb: 0.30 }
+    ];
+
+    function getEndlessStage(distance) {
+      let stage = ENDLESS_STAGES[0];
+      for (const s of ENDLESS_STAGES) {
+        if (distance >= s.dist) stage = s;
+      }
+      return stage;
+    }
+
+    let endlessBestDistance = 0;
+    let endlessBestStageIndex = 0;
+    let endlessTotalRuns = 0;
+    let currentStageIndex = 0;
+
+    function saveEndlessProgress() {
+      try {
+        localStorage.setItem('jumpingBall_endless', JSON.stringify({
+          bestDistance: endlessBestDistance,
+          bestStageIndex: endlessBestStageIndex,
+          totalRuns: endlessTotalRuns
+        }));
+      } catch (e) {}
+    }
+
+    function loadEndlessProgress() {
+      try {
+        const data = localStorage.getItem('jumpingBall_endless');
+        if (data) {
+          const parsed = JSON.parse(data);
+          endlessBestDistance = parsed.bestDistance || 0;
+          endlessBestStageIndex = parsed.bestStageIndex || 0;
+          endlessTotalRuns = parsed.totalRuns || 0;
+        }
+      } catch (e) {}
+    }
+
+    const levelStrategy = {
+      getAvailableColors() {
+        const base = ['pink', 'yellow', 'blue'];
+        if (currentLevel >= 9) return [...base, 'green', 'orange', 'purple'];
+        if (currentLevel >= 7) return [...base, 'green', 'orange'];
+        if (currentLevel >= 5) return [...base, 'green'];
+        return base;
+      },
+      getMaxType() { return getLevel().maxType; },
+      getWinHits() { return getLevel().winHits; },
+      getColorCount() {
+        if (currentLevel >= 9) return 6;
+        if (currentLevel >= 7) return 5;
+        if (currentLevel >= 5) return 4;
+        return 3;
+      },
+      getGapScale() { return 1.0; },
+      getBoostProb() { return 0.15; },
+      hasVictory() { return true; },
+      onHitCountReached() {
+        const victoryZ = -10 - Math.random() * 8;
+        createVictoryTrack(victoryZ);
+        blackHoleActive = true;
+      },
+      onLandOnVictoryTrack() {
+        winning = true;
+        winTimer = 0;
+        velZ = 0;
+        falling = false;
+        bhAttracting = false;
+        hideCombo();
+        ballY = floorContact;
+        velY = Math.abs(velY);
+      },
+      checkStageTransition() {},
+      getDisplayName() {
+        const lv = getLevel();
+        const cycleText = currentCycle > 1 ? `第${currentCycle}周目 · ` : '';
+        return `${cycleText}${lv.name}`;
+      },
+      getAnnounceInfo() {
+        const lv = getLevel();
+        const cycleText = currentCycle > 1 ? `第${currentCycle}周目 · ` : '';
+        return {
+          num: `${cycleText}LEVEL ${currentLevel + 1}`,
+          title: lv.name,
+          sub: `跳 ${lv.winHits} 次 · ${this.getColorCount()}种颜色`
+        };
+      },
+      getDistanceTargetText() {
+        if (targetDistance !== null) return `目标: ${Math.floor(targetDistance)} m`;
+        return '目标: ??? m';
+      },
+      onGameOver() { showGameOver(); },
+      onVictory() { showVictory(); },
+      resetState() {
+        victoryTrackGroups = [];
+        victoryTrackSpawned = false;
+        blackHoleActive = false;
+        bhAttracting = false;
+        winning = false;
+        winTimer = 0;
+        cleanupBlackHole();
+      },
+      onGameOverRestart() { showLevelSelect(); },
+      onVictoryNext() {
+        unlockNextLevel();
+        const isLast = currentLevel >= LEVELS.length - 1;
+        if (isLast) {
+          currentCycle++;
+          currentLevel = 0;
+          unlockedLevels = [true, false, false, false, false, false, false, false, false, false];
+          saveLevelProgress();
+          showLevelSelect();
+        } else {
+          currentLevel++;
+          saveLevelProgress();
+          startGame();
+        }
+      },
+      saveProgress() { saveLevelProgress(); },
+      loadProgress() { loadLevelProgress(); },
+    };
+
+    const endlessStrategy = {
+      getAvailableColors() {
+        const stage = getEndlessStage(totalDistance);
+        const base = ['pink', 'yellow', 'blue'];
+        const extras = ['green', 'orange', 'purple'];
+        return [...base, ...extras.slice(0, stage.colorCount - 3)];
+      },
+      getMaxType() { return getEndlessStage(totalDistance).maxType; },
+      getWinHits() { return Infinity; },
+      getColorCount() { return getEndlessStage(totalDistance).colorCount; },
+      getGapScale() { return getEndlessStage(totalDistance).gapScale; },
+      getBoostProb() { return getEndlessStage(totalDistance).boostProb; },
+      hasVictory() { return false; },
+      onHitCountReached() {},
+      onLandOnVictoryTrack() {},
+      checkStageTransition() {
+        const stage = getEndlessStage(totalDistance);
+        const newIdx = ENDLESS_STAGES.indexOf(stage);
+        if (newIdx > currentStageIndex) {
+          currentStageIndex = newIdx;
+          showEndlessStageAnnounce(stage);
+        }
+      },
+      getDisplayName() {
+        const stage = getEndlessStage(totalDistance);
+        return `无垠 · ${stage.name}`;
+      },
+      getAnnounceInfo() {
+        const stage = getEndlessStage(totalDistance);
+        return {
+          num: `阶段 ${currentStageIndex + 1}`,
+          title: stage.name,
+          sub: `${stage.colorCount}种颜色 · 间距${stage.gapScale < 1 ? '缩小' : '正常'}`
+        };
+      },
+      getDistanceTargetText() {
+        return endlessBestDistance > 0 ? `最远: ${endlessBestDistance}m` : '';
+      },
+      onGameOver() { showEndlessGameOver(); },
+      onVictory() {},
+      resetState() {
+        currentStageIndex = 0;
+        victoryTrackGroups = [];
+        victoryTrackSpawned = false;
+        blackHoleActive = false;
+        bhAttracting = false;
+        winning = false;
+        winTimer = 0;
+        cleanupBlackHole();
+      },
+      onGameOverRestart() { startGame(); },
+      onVictoryNext() {},
+      saveProgress() { saveEndlessProgress(); },
+      loadProgress() { loadEndlessProgress(); },
+    };
+
+    function switchMode(mode) {
+      gameMode = mode;
+      strategy = mode === 'endless' ? endlessStrategy : levelStrategy;
+    }
+
+    strategy = levelStrategy;
+
     // ===== 关卡解锁状态 =====
     let unlockedLevels = [true, false, false, false, false, false, false, false, false, false];
 
@@ -996,11 +1471,11 @@
       const nextLevel = currentLevel + 1;
       if (nextLevel < LEVELS.length && !unlockedLevels[nextLevel]) {
         unlockedLevels[nextLevel] = true;
-        saveProgress();
+        saveLevelProgress();
       }
     }
 
-    function saveProgress() {
+    function saveLevelProgress() {
       try {
         localStorage.setItem('jumpingBall_progress', JSON.stringify({
           unlockedLevels,
@@ -1010,7 +1485,7 @@
       } catch (e) {}
     }
 
-    function loadProgress() {
+    function loadLevelProgress() {
       try {
         const data = localStorage.getItem('jumpingBall_progress');
         if (data) {
@@ -1026,14 +1501,76 @@
     const levelSelectOverlay = document.getElementById('levelSelectOverlay');
     const levelCardsContainer = document.getElementById('levelCards');
     const inGameMenuBtn = document.getElementById('inGameMenuBtn');
+    const tabLevels = document.getElementById('tabLevels');
+    const tabEndless = document.getElementById('tabEndless');
+    const endlessPanel = document.getElementById('endlessPanel');
+    const endlessBestDistEl = document.getElementById('endlessBestDist');
+    const endlessBestStageEl = document.getElementById('endlessBestStage');
+    const endlessRunInfoEl = document.getElementById('endlessRunInfo');
+    const endlessRunDistEl = document.getElementById('endlessRunDist');
+    const endlessRunStageEl = document.getElementById('endlessRunStage');
+    const endlessNewRecordEl = document.getElementById('endlessNewRecord');
+    const endlessStartBtn = document.getElementById('endlessStartBtn');
+    const endlessTotalRunsEl = document.getElementById('endlessTotalRuns');
+    const levelSelectTitle = document.getElementById('levelSelectTitle');
+    const levelSelectSub = document.getElementById('levelSelectSub');
+
+    let currentTab = 'levels';
+    let lastEndlessDistance = 0;
+    let lastEndlessStageIndex = 0;
+    let lastEndlessNewRecord = false;
 
     // 获取当前关卡的颜色数量
     function getColorCount() {
-      if (currentLevel >= 9) return 6;
-      if (currentLevel >= 7) return 5;
-      if (currentLevel >= 5) return 4;
-      return 3;
+      return strategy.getColorCount();
     }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      tabLevels.classList.toggle('active', tab === 'levels');
+      tabEndless.classList.toggle('active', tab === 'endless');
+      if (tab === 'levels') {
+        levelCardsContainer.style.display = 'flex';
+        levelSelectTitle.style.display = 'block';
+        levelSelectSub.style.display = 'block';
+        endlessPanel.classList.remove('visible');
+      } else {
+        levelCardsContainer.style.display = 'none';
+        levelSelectTitle.style.display = 'none';
+        levelSelectSub.style.display = 'none';
+        endlessPanel.classList.add('visible');
+        updateEndlessPanel();
+      }
+    }
+
+    tabLevels.addEventListener('click', () => switchTab('levels'));
+    tabEndless.addEventListener('click', () => switchTab('endless'));
+
+    function updateEndlessPanel() {
+      endlessBestDistEl.textContent = endlessBestDistance > 0 ? `${endlessBestDistance} m` : '0 m';
+      if (endlessBestDistance > 0) {
+        const stage = ENDLESS_STAGES[endlessBestStageIndex];
+        endlessBestStageEl.textContent = `阶段 ${endlessBestStageIndex + 1} · ${stage.name}`;
+      } else {
+        endlessBestStageEl.textContent = '--';
+      }
+      endlessTotalRunsEl.textContent = `已挑战 ${endlessTotalRuns} 次`;
+      if (lastEndlessDistance > 0) {
+        endlessRunInfoEl.style.display = 'block';
+        endlessRunDistEl.textContent = `${Math.floor(lastEndlessDistance)} m`;
+        const stage = getEndlessStage(lastEndlessDistance);
+        const idx = ENDLESS_STAGES.indexOf(stage);
+        endlessRunStageEl.textContent = `阶段 ${idx + 1} · ${stage.name}`;
+        endlessNewRecordEl.style.display = lastEndlessNewRecord ? 'block' : 'none';
+      } else {
+        endlessRunInfoEl.style.display = 'none';
+      }
+    }
+
+    endlessStartBtn.addEventListener('click', () => {
+      switchMode('endless');
+      startGame();
+    });
 
     // 动态生成关卡卡片
     LEVELS.forEach((lv, i) => {
@@ -1053,9 +1590,10 @@
         <div class="card-desc">${colorCount}种颜色</div>
       `;
       card.addEventListener('click', () => {
-        if (!unlockedLevels[i]) return; // 锁定的关卡不可点击
+        if (!unlockedLevels[i]) return;
         currentLevel = i;
-        saveProgress();
+        saveLevelProgress();
+        switchMode('levels');
         startGame();
       });
       levelCardsContainer.appendChild(card);
@@ -1070,10 +1608,8 @@
     }
 
     function showLevelSelect() {
+      switchMode('levels');
       updateCardStates();
-      // 更新周目显示（一周目不显示，二周目及以上显示）
-      const levelSelectTitle = document.getElementById('levelSelectTitle');
-      const levelSelectSub = document.getElementById('levelSelectSub');
       if (currentCycle > 1) {
         levelSelectTitle.textContent = `第${currentCycle}周目`;
         levelSelectSub.textContent = `难度系数: ${getCycleMultiplier()}x`;
@@ -1081,6 +1617,15 @@
         levelSelectTitle.textContent = '选择关卡';
         levelSelectSub.textContent = 'INTERSTELLAR';
       }
+      switchTab(currentTab);
+      levelSelectOverlay.style.display = 'flex';
+      inGameMenuBtn.style.display = 'none';
+    }
+
+    function showEndlessSelect() {
+      switchMode('endless');
+      switchTab('endless');
+      updateEndlessPanel();
       levelSelectOverlay.style.display = 'flex';
       inGameMenuBtn.style.display = 'none';
     }
@@ -1092,20 +1637,23 @@
     function startGame() {
       hideLevelSelect();
       inGameMenuBtn.style.display = 'block';
+      strategy.loadProgress();
       resetGame();
     }
 
     inGameMenuBtn.addEventListener('click', () => {
-      showLevelSelect();
+      if (gameMode === 'endless') {
+        showEndlessSelect();
+      } else {
+        showLevelSelect();
+      }
     });
 
-    // 返回菜单按钮（在关卡选择界面内，此处留空功能，因为已经在选择界面了）
     document.getElementById('backToMenuBtn').addEventListener('click', () => {
-      // 可以扩展为返回主菜单逻辑，目前关卡选择就是主菜单
     });
 
-    // 初始加载进度并显示关卡选择界面
-    loadProgress();
+    loadLevelProgress();
+    loadEndlessProgress();
     showLevelSelect();
 
     // ===== 轨道组系统 =====
@@ -1235,7 +1783,7 @@
     function createRandomGroup(z, safeColor, maxType) {
       maxType = maxType || 3;
       // 15% 概率生成加速轨道（类型4）
-      if (Math.random() < 0.15) {
+      if (Math.random() < strategy.getBoostProb()) {
         const group = createType4(z);
         trackGroups.push(group);
         groupZList.push(z);
@@ -1286,7 +1834,7 @@
     }
 
     function randGap() {
-      return GAP_MIN + Math.random() * (GAP_MAX - GAP_MIN);
+      return (GAP_MIN + Math.random() * (GAP_MAX - GAP_MIN)) * strategy.getGapScale();
     }
 
     // 追踪最近的长直轨道颜色，用于保证路径连通
@@ -1307,7 +1855,7 @@
       // 继续随机生成直到填满可见区域
       while (z > -VISIBLE_DEPTH) {
         z -= randGap();
-        createRandomGroup(z, lastLongTrackColor, getLevel().maxType);
+        createRandomGroup(z, lastLongTrackColor, strategy.getMaxType());
         const newGroup = trackGroups[trackGroups.length - 1];
         if (newGroup.type === 1) {
           lastLongTrackColor = newGroup.colorKey;
@@ -1366,11 +1914,11 @@
         }
       }
 
-      if (!victoryTrackSpawned) {
+      if (!victoryTrackSpawned || !strategy.hasVictory()) {
         let minZ = groupZList.length > 0 ? Math.min(...groupZList) : 0;
         while (minZ > -VISIBLE_DEPTH) {
           minZ -= randGap();
-          createRandomGroup(minZ, lastLongTrackColor, getLevel().maxType);
+          createRandomGroup(minZ, lastLongTrackColor, strategy.getMaxType());
           const newGroup = trackGroups[trackGroups.length - 1];
           if (newGroup.type === 1) {
             lastLongTrackColor = newGroup.colorKey;
@@ -1549,9 +2097,8 @@
         });
       }
 
-      // 1 秒后弹出 GameOver
       setTimeout(() => {
-        showGameOver();
+        strategy.onGameOver();
       }, DEATH_DURATION * 1000);
     }
 
@@ -1875,16 +2422,64 @@
     // GameOver 弹窗控制
     const gameOverOverlay = document.getElementById('gameOverOverlay');
     const restartBtn = document.getElementById('restartBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const backToMenuLink = document.getElementById('backToMenuLink');
+    const gameOverEndlessInfo = document.getElementById('gameOverEndlessInfo');
+    const goDistEl = document.getElementById('goDist');
+    const goStageEl = document.getElementById('goStage');
+    const goNewRecordEl = document.getElementById('goNewRecord');
 
     function showGameOver() {
+      if (gameMode === 'endless') {
+        showEndlessGameOver();
+      } else {
+        gameOverEndlessInfo.classList.remove('visible');
+        retryBtn.style.display = 'none';
+        backToMenuLink.classList.remove('visible');
+        restartBtn.style.display = 'inline-block';
+        gameOverOverlay.style.display = 'flex';
+      }
+    }
+
+    function showEndlessGameOver() {
+      const dist = Math.floor(totalDistance);
+      const stage = getEndlessStage(totalDistance);
+      const stageIdx = ENDLESS_STAGES.indexOf(stage);
+      const isNewRecord = dist > endlessBestDistance;
+      if (isNewRecord) {
+        endlessBestDistance = dist;
+        endlessBestStageIndex = stageIdx;
+      }
+      endlessTotalRuns++;
+      lastEndlessDistance = totalDistance;
+      lastEndlessStageIndex = stageIdx;
+      lastEndlessNewRecord = isNewRecord;
+      saveEndlessProgress();
+
+      goDistEl.textContent = `${dist} m`;
+      goStageEl.textContent = `阶段 ${stageIdx + 1} · ${stage.name}`;
+      goNewRecordEl.style.display = isNewRecord ? 'block' : 'none';
+      gameOverEndlessInfo.classList.add('visible');
+      retryBtn.style.display = 'inline-block';
+      backToMenuLink.classList.add('visible');
+      restartBtn.style.display = 'none';
       gameOverOverlay.style.display = 'flex';
     }
+
     function hideGameOver() {
       gameOverOverlay.style.display = 'none';
     }
     restartBtn.addEventListener('click', () => {
       hideGameOver();
-      showLevelSelect();
+      strategy.onGameOverRestart();
+    });
+    retryBtn.addEventListener('click', () => {
+      hideGameOver();
+      startGame();
+    });
+    backToMenuLink.addEventListener('click', () => {
+      hideGameOver();
+      showEndlessSelect();
     });
 
     // 坠落后超过一定距离，重置游戏
@@ -1916,12 +2511,15 @@
     function resetDistanceUI() {
       totalDistance = 0;
       targetDistance = null;
-      distTarget.textContent = '目标: ??? m';
-      distTarget.classList.remove('revealed');
-      // 一周目不显示周目信息，二周目及以上显示
-      const lv = getLevel();
-      const cycleText = currentCycle > 1 ? `第${currentCycle}周目 · ` : '';
-      levelNameEl.textContent = `${cycleText}${lv.name}`;
+      const targetText = strategy.getDistanceTargetText();
+      distTarget.textContent = targetText || '目标: ??? m';
+      if (targetText) {
+        distTarget.classList.add('revealed');
+      } else {
+        distTarget.textContent = '目标: ??? m';
+        distTarget.classList.remove('revealed');
+      }
+      levelNameEl.textContent = strategy.getDisplayName();
       updateDistanceUI();
     }
 
@@ -2145,20 +2743,7 @@
     }
     victoryBtn.addEventListener('click', () => {
       hideVictory();
-      unlockNextLevel();
-      const isLastLevel = currentLevel >= LEVELS.length - 1;
-      if (isLastLevel) {
-        // 进入下一周目，重置关卡进度
-        currentCycle++;
-        currentLevel = 0;
-        unlockedLevels = [true, false, false, false, false, false, false, false, false, false];
-        saveProgress();
-        showLevelSelect();
-      } else {
-        currentLevel++;
-        saveProgress();
-        startGame();
-      }
+      strategy.onVictoryNext();
     });
 
     // ===== 关卡名称闪现 =====
@@ -2169,13 +2754,24 @@
     let levelAnnounceTimer = null;
 
     function showLevelAnnounce() {
-      const lv = getLevel();
-      // 一周目不显示周目信息，二周目及以上显示
-      const cycleText = currentCycle > 1 ? `第${currentCycle}周目 · ` : '';
-      levelNumEl.textContent = `${cycleText}LEVEL ${currentLevel + 1}`;
-      levelTitleEl.textContent = lv.name;
-      levelSubEl.textContent = `跳 ${lv.winHits} 次 · ${getColorCount()}种颜色`;
-      // 移除再添加 class 重置动画
+      const info = strategy.getAnnounceInfo();
+      levelNumEl.textContent = info.num;
+      levelTitleEl.textContent = info.title;
+      levelSubEl.textContent = info.sub;
+      levelAnnounce.classList.remove('show');
+      void levelAnnounce.offsetWidth;
+      levelAnnounce.classList.add('show');
+      if (levelAnnounceTimer) clearTimeout(levelAnnounceTimer);
+      levelAnnounceTimer = setTimeout(() => {
+        levelAnnounce.classList.remove('show');
+      }, 2600);
+    }
+
+    function showEndlessStageAnnounce(stage) {
+      const idx = ENDLESS_STAGES.indexOf(stage);
+      levelNumEl.textContent = `阶段 ${idx + 1}`;
+      levelTitleEl.textContent = stage.name;
+      levelSubEl.textContent = `${stage.colorCount}种颜色 · 间距${stage.gapScale < 1 ? '缩小' : '正常'}`;
       levelAnnounce.classList.remove('show');
       void levelAnnounce.offsetWidth;
       levelAnnounce.classList.add('show');
@@ -2225,33 +2821,20 @@
         }
       }
       updateBlackHole(dt);
-      // 1.5秒后弹出胜利窗口
       if (winTimer > 1.5) {
         winning = false;
-        showVictory();
+        strategy.onVictory();
       }
     }
 
     function resetGame() {
-      // 隐藏连击
       hideCombo();
-      // 隐藏胜利
       hideVictory();
-      // 显示关卡名称闪现
       showLevelAnnounce();
-      // 重置距离
       resetDistanceUI();
-      // 重置黑洞和碰撞计数
       cleanupBlackHole();
       hitCount = 0;
-      blackHoleActive = false;
-      bhAttracting = false;
-      winning = false;
-      winTimer = 0;
-      // 重置通关轨道状态
-      victoryTrackGroups = [];
-      victoryTrackSpawned = false;
-      // 重置加速状态
+      strategy.resetState();
       boostTimer = 0;
       currentGravityY = GRAVITY_Y;
       boostCharging = false;
@@ -2399,11 +2982,8 @@
               }
               triggerCombo();
               hitCount++;
-              if (hitCount >= getLevel().winHits && !victoryTrackSpawned) {
-                // 生成通关轨道（在球前方较近位置，约 3-5 次跳跃距离）
-                const victoryZ = -10 - Math.random() * 8;
-                createVictoryTrack(victoryZ);
-                blackHoleActive = true;
+              if (hitCount >= strategy.getWinHits() && !victoryTrackSpawned) {
+                strategy.onHitCountReached();
               }
             } else if (group.type !== 1 && ballColorKey && colorKey && ballColorKey !== colorKey) {
               // 方形轨道（type2/3）异色检测 → 碎裂
@@ -2412,16 +2992,7 @@
               // 正常反弹（type1 / type2/3 同色）
               // 检查是否踩到通关轨道
               if (group.isVictoryTrack && !winning) {
-                // 踩到通关轨道，触发胜利！
-                winning = true;
-                winTimer = 0;
-                velZ = 0;
-                falling = false;
-                bhAttracting = false;
-                hideCombo();
-                ballY = floorContact;
-                velY = Math.abs(velY);
-                // 触发着陆特效
+                strategy.onLandOnVictoryTrack();
                 if (hit.mesh && hit.colorKey) {
                   triggerLandEffect(hit.mesh, hit.colorKey, hit.group, LONG_SIZE_X, LONG_SIZE_Z);
                 }
@@ -2437,11 +3008,8 @@
                 }
                 triggerCombo();
                 hitCount++;
-                if (hitCount >= getLevel().winHits && !victoryTrackSpawned) {
-                  // 生成通关轨道（在球前方较近位置，约 3-5 次跳跃距离）
-                  const victoryZ = -10 - Math.random() * 8;
-                  createVictoryTrack(victoryZ);
-                  blackHoleActive = true;
+                if (hitCount >= strategy.getWinHits() && !victoryTrackSpawned) {
+                  strategy.onHitCountReached();
                 }
               }
             }
@@ -2512,6 +3080,7 @@
       controls.update();
       updateLandEffects(dt);
       updateBoostParticles(dt);
+      strategy.checkStageTransition();
       updateDistanceUI();
       renderer.render(scene, camera);
     }
