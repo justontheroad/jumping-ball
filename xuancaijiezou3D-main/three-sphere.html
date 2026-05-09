@@ -365,25 +365,6 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    #backToMenuBtn {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(180, 210, 255, 0.5);
-      background: transparent;
-      border: 1px solid rgba(100, 180, 255, 0.15);
-      padding: 10px 32px;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s, transform 0.2s;
-      letter-spacing: 2px;
-    }
-    #backToMenuBtn:hover {
-      color: rgba(180, 210, 255, 0.9);
-      border-color: rgba(100, 180, 255, 0.4);
-      transform: scale(1.04);
-    }
-
     /* 模式切换 Tab */
     #modeTabs {
       display: flex;
@@ -751,7 +732,6 @@
           <div class="endless-total-runs" id="endlessTotalRuns">已挑战 0 次</div>
         </div>
       </div>
-      <button id="backToMenuBtn">返回菜单</button>
     </div>
   </div>
 
@@ -1649,9 +1629,6 @@
       }
     });
 
-    document.getElementById('backToMenuBtn').addEventListener('click', () => {
-    });
-
     loadLevelProgress();
     loadEndlessProgress();
     showLevelSelect();
@@ -2435,7 +2412,7 @@
       } else {
         gameOverEndlessInfo.classList.remove('visible');
         retryBtn.style.display = 'none';
-        backToMenuLink.classList.remove('visible');
+        backToMenuLink.classList.add('visible');
         restartBtn.style.display = 'inline-block';
         gameOverOverlay.style.display = 'flex';
       }
@@ -2479,7 +2456,11 @@
     });
     backToMenuLink.addEventListener('click', () => {
       hideGameOver();
-      showEndlessSelect();
+      if (gameMode === 'endless') {
+        showEndlessSelect();
+      } else {
+        showLevelSelect();
+      }
     });
 
     // 坠落后超过一定距离，重置游戏
@@ -3014,7 +2995,6 @@
               }
             }
           } else {
-            // 没碰到任何轨道，直接坠落
             velY = -Math.abs(velY);
             falling = true;
             velZ = 0;
@@ -3028,9 +3008,9 @@
           }
         }
       } else if (falling) {
-        // 坠落模式：一直往下掉
         if (ballY < FALL_RESET_Y) {
-          resetGame();
+          falling = false;
+          strategy.onGameOver();
         }
       } else if (dying) {
         // 碎裂动画模式
