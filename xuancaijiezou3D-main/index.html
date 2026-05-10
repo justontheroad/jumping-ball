@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Three.js 无限轨道弹跳球</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <div id="levelSelectOverlay">
+    <div id="levelSelectContainer">
+      <div id="modeTabs">
+        <button class="mode-tab active" id="tabLevels">关卡模式</button>
+        <button class="mode-tab" id="tabEndless">无限模式</button>
+      </div>
+      <div id="levelSelectTitle">选择关卡</div>
+      <div id="levelSelectSub">INTERSTELLAR</div>
+      <div id="levelCards"></div>
+      <div id="endlessPanel">
+        <div class="endless-card">
+          <div class="endless-en">ENDLESS</div>
+          <div class="endless-zh">无 垠</div>
+          <div class="endless-divider"></div>
+          <div class="endless-label">最远记录</div>
+          <div class="endless-best-dist" id="endlessBestDist">0 m</div>
+          <div class="endless-best-stage" id="endlessBestStage">--</div>
+          <div class="endless-run-info" id="endlessRunInfo" style="display:none">
+            <div class="endless-divider"></div>
+            <div class="endless-label">本次统计</div>
+            <div class="endless-run-dist" id="endlessRunDist">0 m</div>
+            <div class="endless-run-stage" id="endlessRunStage">--</div>
+            <div class="endless-new-record" id="endlessNewRecord" style="display:none">NEW RECORD!</div>
+          </div>
+          <button id="endlessStartBtn">开始挑战</button>
+          <div class="endless-total-runs" id="endlessTotalRuns">已挑战 0 次</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="inGameMenuBtn">菜单</button>
+
+  <div id="victoryOverlay">
+    <div id="victoryBox">
+      <h1 id="victoryTitle">YOU WIN!</h1>
+      <p id="victoryDesc">你成功进入了黑洞！</p>
+      <button id="victoryBtn">返回选关</button>
+    </div>
+  </div>
+
+  <div id="levelAnnounce">
+    <div class="level-num" id="levelNum">LEVEL 1</div>
+    <div class="level-title" id="levelTitle">永恒号</div>
+    <div class="level-sub" id="levelSub">跳 1 次，进入黑洞</div>
+  </div>
+
+  <div id="distanceUI">
+    <div id="levelName">永恒号</div>
+    <div id="distCurrent">0<span class="unit">m</span></div>
+    <div id="distTarget">目标: ??? m</div>
+  </div>
+
+  <div id="comboUI">
+    <div id="comboWord">PERFECT</div>
+    <div id="comboCount">x1</div>
+  </div>
+
+  <div id="gameOverOverlay">
+    <div id="gameOverBox">
+      <h1>GAME OVER</h1>
+      <p>颜色不同，球碎了...</p>
+      <div id="gameOverEndlessInfo">
+        <div class="go-dist" id="goDist">0 m</div>
+        <div class="go-stage" id="goStage">--</div>
+        <div class="go-new-record" id="goNewRecord" style="display:none">NEW RECORD!</div>
+      </div>
+      <button id="retryBtn">再来一次</button>
+      <button id="restartBtn">返回选关</button>
+      <button id="backToMenuLink">返回菜单</button>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
