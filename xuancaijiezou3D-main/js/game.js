@@ -83,6 +83,12 @@ export function resetGame() {
   state.fns.cleanupBlackHole();
   state.hitCount = 0;
   state.strategy.resetState();
+  state.generatedCount = 0;
+  if (state.strategy.hasVictory()) {
+    state.targetDistance = null;
+  } else {
+    state.targetDistance = null;
+  }
   state.boostTimer = 0;
   state.currentGravityY = GRAVITY_Y;
   state.boostCharging = false;

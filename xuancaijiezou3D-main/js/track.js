@@ -149,55 +149,38 @@ export function createType4(z) {
   return { type: 4, meshes: [mesh], mats: [mat], z, colorKey: 'boost' };
 }
 
-export function createVictoryTrack(startZ) {
-  const VICTORY_GAP = 6 + Math.random() * 3;
+export function createVictoryBlocksAt(z) {
+  const gap1 = randGap();
+  const gap2 = randGap();
+  const z1 = z - gap1;
+  const z2 = z1 - gap2;
 
-  const group1 = createType1(startZ, randColor());
+  const group1 = createType1(z, randColor());
   state.trackGroups.push(group1);
-  state.groupZList.push(startZ);
+  state.groupZList.push(z);
+  state.generatedCount++;
 
-  const z2 = startZ - VICTORY_GAP;
-  const group2 = createType1(z2, randColor());
+  const group2 = createType1(z1, randColor());
   group2.isVictoryTrack = true;
   state.trackGroups.push(group2);
-  state.groupZList.push(z2);
+  state.groupZList.push(z1);
   state.victoryTrackGroups.push(state.trackGroups.length - 1);
+  state.generatedCount++;
 
-  const z3 = z2 - VICTORY_GAP;
-  const group3 = createType1(z3, randColor());
+  const group3 = createType1(z2, randColor());
   state.trackGroups.push(group3);
-  state.groupZList.push(z3);
+  state.groupZList.push(z2);
+  state.generatedCount++;
 
-  for (let i = state.trackGroups.length - 1; i >= 0; i--) {
-    const gz = state.groupZList[i];
-    if (gz < z3 - 2 && !state.trackGroups[i].isVictoryTrack) {
-      disposeGroup(state.trackGroups[i]);
-      state.trackGroups.splice(i, 1);
-      state.groupZList.splice(i, 1);
-      for (let j = 0; j < state.victoryTrackGroups.length; j++) {
-        if (state.victoryTrackGroups[j] === i) {
-          state.victoryTrackGroups.splice(j, 1);
-          j--;
-        } else if (state.victoryTrackGroups[j] > i) {
-          state.victoryTrackGroups[j]--;
-        }
-      }
-    } else if ((state.trackGroups[i].type === 2 || state.trackGroups[i].type === 3) && gz >= z3 - 2 && gz <= startZ + 2) {
-      const oldColor = state.trackGroups[i].colorKeys ? state.trackGroups[i].colorKeys[0] : randColor();
-      disposeGroup(state.trackGroups[i]);
-      const replacement = createType1(gz, oldColor);
-      replacement.isVictoryTrack = state.trackGroups[i].isVictoryTrack;
-      state.trackGroups[i] = replacement;
-    }
-  }
+  state.fns.createBlackHole(z1);
+  state.bhGroup.scale.setScalar(0);
+  state.bhSpawnTimer = 0;
 
-  state.fns.createBlackHole(z2);
-  state.bhGroup.scale.setScalar(1);
-
-  state.targetDistance = state.totalDistance + Math.abs(z2);
+  state.targetDistance = state.totalDistance + Math.abs(z1);
   state.fns.updateDistanceUI();
 
   state.victoryTrackSpawned = true;
+  state.blackHoleActive = true;
 }
 
 export function createRandomGroup(z, safeColor, maxType) {
@@ -258,12 +241,18 @@ export function generateInitialGroups() {
     const g = createType1(z, randColor());
     state.trackGroups.push(g);
     state.groupZList.push(z);
+    state.generatedCount++;
     z -= randGap();
   }
   state.lastLongTrackColor = state.trackGroups[state.trackGroups.length - 1].colorKey;
   while (z > -VISIBLE_DEPTH) {
     z -= randGap();
+    if (state.strategy.hasVictory() && !state.victoryTrackSpawned && state.generatedCount >= state.strategy.getWinHits()) {
+      createVictoryBlocksAt(z);
+      return;
+    }
     createRandomGroup(z, state.lastLongTrackColor, state.strategy.getMaxType());
+    state.generatedCount++;
     const newGroup = state.trackGroups[state.trackGroups.length - 1];
     if (newGroup.type === 1) {
       state.lastLongTrackColor = newGroup.colorKey;
@@ -317,7 +306,12 @@ export function updateTrack(deltaZ) {
     let minZ = state.groupZList.length > 0 ? Math.min(...state.groupZList) : 0;
     while (minZ > -VISIBLE_DEPTH) {
       minZ -= randGap();
+      if (state.strategy.hasVictory() && !state.victoryTrackSpawned && state.generatedCount >= state.strategy.getWinHits()) {
+        createVictoryBlocksAt(minZ);
+        break;
+      }
       createRandomGroup(minZ, state.lastLongTrackColor, state.strategy.getMaxType());
+      state.generatedCount++;
       const newGroup = state.trackGroups[state.trackGroups.length - 1];
       if (newGroup.type === 1) {
         state.lastLongTrackColor = newGroup.colorKey;

@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { BOUNCE_PERIOD, _g, INIT_HEIGHT, COLORS, GRAVITY_Y } from './config.js';
 import { initScene } from './scene.js';
 import { initPlayer } from './player.js';
-import { initTrack, generateInitialGroups, createType1, createType2, createType3, createType4, createRandomGroup, createVictoryTrack, updateTrack, findCollisionWithAnyGroup, disposeGroup, removeGroup, randGap, randColor, getAvailableColors, onLandUpdateVelZ, recalcVelZ, recalcVelZFromAir } from './track.js';
+import { initTrack, generateInitialGroups, createType1, createType2, createType3, createType4, createRandomGroup, createVictoryBlocksAt, updateTrack, findCollisionWithAnyGroup, disposeGroup, removeGroup, randGap, randColor, getAvailableColors, onLandUpdateVelZ, recalcVelZ, recalcVelZFromAir } from './track.js';
 import { initEffects, setBoostParticleColor, updateBoostParticles, triggerLandEffect, updateLandEffects, triggerCombo, hideCombo, triggerDeath, updateDeath, cleanupDeath } from './effects.js';
 import { createBlackHole, updateBlackHole, cleanupBlackHole, checkBlackHoleCollision, updateWin, spawnBlackHole } from './blackhole.js';
 import { dom, switchTab, updateEndlessPanel, updateCardStates, showLevelSelect, showEndlessSelect, hideLevelSelect, showGameOver, showEndlessGameOver, hideGameOver, showVictory, hideVictory, showLevelAnnounce, showEndlessStageAnnounce, updateDistanceUI, resetDistanceUI, generateLevelCards, bindUIEvents } from './ui.js';
@@ -38,7 +38,7 @@ state.fns = {
   createType3,
   createType4,
   createRandomGroup,
-  createVictoryTrack,
+  createVictoryBlocksAt,
   updateTrack,
   findCollisionWithAnyGroup,
   disposeGroup,

@@ -72,6 +72,7 @@ export const state = {
 
   hitCount: 0,
   totalDistance: 0,
+  generatedCount: 0,
   blackHoleActive: false,
   winning: false,
   winTimer: 0,

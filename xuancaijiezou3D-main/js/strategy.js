@@ -21,9 +21,9 @@ export const levelStrategy = {
   getBoostProb() { return 0.15; },
   hasVictory() { return true; },
   onHitCountReached() {
-    const victoryZ = -10 - Math.random() * 8;
-    state.fns.createVictoryTrack(victoryZ);
-    state.blackHoleActive = true;
+    if (state.victoryTrackSpawned) return;
+    const minZ = state.groupZList.length > 0 ? Math.min(...state.groupZList) : 0;
+    state.fns.createVictoryBlocksAt(minZ);
   },
   onLandOnVictoryTrack() {
     state.winning = true;
